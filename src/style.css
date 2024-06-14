@@ -1,0 +1,47 @@
+.mainContainer {
+  padding: 1em 2em;
+  display: grid;
+  gap: 1em;
+}
+.mainContainer nav {
+  display: flex;
+  justify-content: space-between;
+}
+.mainContainer nav .links ul {
+  margin: 0;
+  display: flex;
+  gap: 1em;
+  list-style: none;
+}
+.mainContainer .taskContainer .inputs {
+  display: grid;
+  gap: 0.5em;
+}
+.mainContainer .taskContainer .inputs textarea {
+  height: 10em;
+}
+.mainContainer .taskContainer .inputs button {
+  width: 8em;
+  height: 2em;
+  justify-self: end;
+}
+.mainContainer .accordion .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mainContainer .accordion .title h2 {
+  margin: 0;
+}
+.mainContainer .accordion .title .action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mainContainer .accordion .title .action .dateDetail {
+  font-size: smaller;
+  display: grid;
+}
+.mainContainer .accordion .content p {
+  text-align: start;
+}/*# sourceMappingURL=style.css.map */
