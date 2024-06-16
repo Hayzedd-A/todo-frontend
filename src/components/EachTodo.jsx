@@ -5,16 +5,12 @@ import { FaMarker, FaTrash } from "react-icons/fa";
 // import Data from "../../Datas/accordionData";
 // import "./styles.css";
 
-function EachTodo({ Data }) {
+function EachTodo({ Data, popUp, taskID }) {
   let [selectionType, setSelectionType] = useState(["Multiple", "Single"]);
   let [selected, setSelected] = useState(null);
   let [selectedItems, setSelectedItem] = useState([]);
   let [newHeight, setnewHeight] = useState("");
 
-  const selectionClick = () => {
-    let [a, b] = selectionType;
-    setSelectionType([b, a]);
-  };
   const HandleListClick = (id) => {
     if (selectionType[0] === "Single") {
       selectedItems.includes(id)
@@ -22,6 +18,10 @@ function EachTodo({ Data }) {
         : setSelectedItem([...selectedItems, id]);
     } else selected === id ? setSelected(null) : setSelected(id);
     setnewHeight("max-content");
+  };
+  const handleTaskClick = (id, text) => {
+    popUp([true, text]);
+    taskID(id);
   };
   return (
     <div
@@ -43,23 +43,24 @@ function EachTodo({ Data }) {
               height: newHeight,
             }}
           >
-            <div
-              className="title"
-              onClick={() => HandleListClick(ele.id)}
-              style={{}}
-            >
+            <div className="title" onClick={() => HandleListClick(ele.id)}>
               <h2>{ele.title}</h2>
               <div className="action">
                 <span className="dateDetail">
                   <span>
-                    Created: {ele.createdDate.replace("T", "  @ ").slice(-5)}
+                    Created: {ele.createdDate.replace("T", "  @ ").slice(0, -5)}
                   </span>
                   <span>Due: {ele.dueDate}</span>
                 </span>
-                <FaTrash fill="darkred" size={"1.4em"}></FaTrash>
+                <FaTrash
+                  fill="darkred"
+                  size={"1.4em"}
+                  onClick={() => handleTaskClick(ele.id, "delete")}
+                ></FaTrash>
                 <BiSelectMultiple
                   fill="green"
                   size={"1.4em"}
+                  onClick={() => handleTaskClick(ele.id, "mark as complete")}
                 ></BiSelectMultiple>
               </div>
             </div>

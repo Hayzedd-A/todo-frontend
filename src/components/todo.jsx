@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import EachTodo from "./EachTodo";
+import PopUp from "./PopUp";
 // import { FaPlus } from "react-icons";
 
 function Todo() {
@@ -7,7 +8,9 @@ function Todo() {
   let [inputField, setInputField] = useState(false);
   let [title, setTitle] = useState("");
   let [body, setBody] = useState("");
-  console.log("todo function");
+  let [PopUpState, setPopUpState] = useState([false, ""]);
+  let [taskID, setTaskID] = useState("");
+  console.log("todo function", taskID);
   useEffect(() => {
     async function getTodo() {
       try {
@@ -29,8 +32,19 @@ function Todo() {
       // dueDate: dueDate,
     });
   };
+  const handlePopUp = (status) => {
+    if (status) {
+      // handle yes
+    } else {
+      // handle no
+    }
+    setPopUpState([false, ""]);
+  };
   return (
     <div className="mainContainer">
+      {PopUpState[0] ? (
+        <PopUp text={PopUpState[1]} action={handlePopUp} />
+      ) : null}
       <nav>
         <div className="logo">My TODO</div>
         <div className="links">
@@ -74,7 +88,13 @@ function Todo() {
         ) : null}
 
         <div className="taskLists">
-          {allTodo ? <EachTodo Data={allTodo.data} /> : null}
+          {allTodo ? (
+            <EachTodo
+              Data={allTodo.data}
+              popUp={setPopUpState}
+              taskID={setTaskID}
+            />
+          ) : null}
         </div>
       </div>
     </div>
