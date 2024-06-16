@@ -4,6 +4,7 @@ import EachTodo from "./EachTodo";
 
 function Todo() {
   let [allTodo, setAllTodo] = useState(null);
+  let [inputField, setInputField] = useState(false);
   let [title, setTitle] = useState("");
   let [body, setBody] = useState("");
   console.log("todo function");
@@ -31,36 +32,47 @@ function Todo() {
   return (
     <div className="mainContainer">
       <nav>
-        <div className="logo">TODO</div>
+        <div className="logo">My TODO</div>
         <div className="links">
           <ul>
-            <li>New +</li>
-            <li>All task</li>
+            <li id="add" onClick={() => setInputField((prev) => !prev)}>
+              New +
+            </li>
+            <li id="all">All task</li>
             <li>Done</li>
           </ul>
         </div>
       </nav>
       <div className="taskContainer">
-        <div className="inputs">
-          <input
-            type="text"
-            id="title"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <input type="date" />
-          <textarea
-            name="description"
-            id="description"
-            placeholder="Body"
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-          ></textarea>
-          <button type="submit" onClick={handleSubmit}>
-            ADD
-          </button>
-        </div>
+        {inputField ? (
+          <div className="inputs">
+            <label htmlFor="title">
+              Title:
+              <input
+                type="text"
+                id="title"
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </label>
+            <label htmlFor="date">
+              Due Date:
+              <input type="date" placeholder="Due Date" />
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              placeholder="Body"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+            ></textarea>
+            <button type="submit" onClick={handleSubmit}>
+              ADD
+            </button>
+          </div>
+        ) : null}
+
         <div className="taskLists">
           {allTodo ? <EachTodo Data={allTodo.data} /> : null}
         </div>

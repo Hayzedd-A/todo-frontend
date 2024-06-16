@@ -1,11 +1,16 @@
 .mainContainer {
+  background-color: rgb(251, 219, 224);
   padding: 1em 2em;
   display: grid;
   gap: 1em;
+  height: 100vh;
 }
 .mainContainer nav {
   display: flex;
   justify-content: space-between;
+}
+.mainContainer nav .logo {
+  font-weight: 900;
 }
 .mainContainer nav .links ul {
   margin: 0;
@@ -13,17 +18,46 @@
   gap: 1em;
   list-style: none;
 }
+.mainContainer nav .links ul li {
+  background-color: gray;
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+.mainContainer nav .links ul li#add {
+  background-color: rgb(25, 209, 25);
+}
 .mainContainer .taskContainer .inputs {
   display: grid;
   gap: 0.5em;
+  grid-template-columns: 1fr 1fr;
+}
+.mainContainer .taskContainer .inputs label {
+  display: flex;
+  gap: 8px;
+}
+.mainContainer .taskContainer .inputs input {
+  flex: 1;
 }
 .mainContainer .taskContainer .inputs textarea {
+  flex: 1;
   height: 10em;
+  grid-column: span 2;
 }
 .mainContainer .taskContainer .inputs button {
   width: 8em;
   height: 2em;
   justify-self: end;
+  grid-column-start: 2;
+}
+.mainContainer .taskContainer .inputs button {
+  background-color: rgb(110, 110, 236);
+  color: white;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  padding: 4px 8px;
 }
 .mainContainer .accordion .title {
   display: flex;
