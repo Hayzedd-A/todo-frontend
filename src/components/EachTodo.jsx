@@ -51,7 +51,9 @@ function EachTodo({ Data }) {
               <h2>{ele.title}</h2>
               <div className="action">
                 <span className="dateDetail">
-                  <span>Created: {ele.createdDate}</span>
+                  <span>
+                    Created: {ele.createdDate.replace("T", "  @ ").slice(-5)}
+                  </span>
                   <span>Due: {ele.dueDate}</span>
                 </span>
                 <FaTrash fill="darkred" size={"1.4em"}></FaTrash>
@@ -63,9 +65,9 @@ function EachTodo({ Data }) {
             </div>
             <div className="content">
               {selectionType[0] === "Single" ? (
-                <p>{selectedItems.includes(ele.id) ? ele.description : null}</p>
+                <p>{selectedItems.includes(ele.id) ? ele.body : null}</p>
               ) : (
-                <p>{selected === ele.id ? ele.description : null}</p>
+                <p>{selected === ele.id ? ele.body : null}</p>
               )}
             </div>
           </li>

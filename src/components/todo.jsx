@@ -10,7 +10,8 @@ function Todo() {
   useEffect(() => {
     async function getTodo() {
       try {
-        let response = await fetch("http://127.0.0.1:8080");
+        let response = await fetch("http://127.0.0.1:3110/todo");
+        console.log(response);
         let allTodo = await response.json();
         console.log(allTodo.data);
         setAllTodo(allTodo);
