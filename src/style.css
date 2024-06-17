@@ -47,6 +47,34 @@
 .mainContainer .popUp .container button:hover {
   background-color: rgb(4, 168, 4);
 }
+.mainContainer .signin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: grid;
+  place-content: center;
+}
+.mainContainer .signin .subContainer {
+  width: -moz-max-content;
+  width: max-content;
+  height: -moz-max-content;
+  height: max-content;
+  background-color: white;
+  border-radius: 1em;
+}
+.mainContainer .signin .subContainer form {
+  padding: 2em;
+  display: grid;
+  gap: 1em;
+  align-items: center;
+}
+.mainContainer .signin .subContainer form input {
+  padding: 4px 12px;
+  border: none;
+}
 .mainContainer nav {
   display: flex;
   justify-content: space-between;

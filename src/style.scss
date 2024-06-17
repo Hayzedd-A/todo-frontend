@@ -15,35 +15,61 @@
     display: grid;
     place-content: center;
     .container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1em;
+      padding: 2em 4em;
+      background-color: white;
+      border-radius: 0.7em;
+      h3 {
+        grid-column: span 2;
+      }
+      button {
+        background-color: rgb(25, 209, 25);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        cursor: pointer;
+        &:active {
+          scale: 0.9;
+        }
+        &#yes {
+          background-color: rgb(241, 106, 106);
+          &:hover {
+            background-color: rgb(243, 71, 71);
+          }
+        }
+        &:hover {
+          background-color: rgb(4, 168, 4);
+        }
+      }
+    }
+  }
+  .signin {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: grid;
+    place-content: center;
+    .subContainer {
+      width: max-content;
+      height: max-content;
+      background-color: white;
+      border-radius: 1em;
+      form {
+        padding: 2em;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
         gap: 1em;
-        padding: 2em 4em;
-        background-color: white;
-        border-radius: 0.7em;
-        h3 {
-            grid-column: span 2;
+        align-items: center;
+        input {
+          padding: 4px 12px;
+          border: none;
         }
-        button {
-            background-color: rgb(25, 209, 25);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 6px 12px;
-            cursor: pointer;
-            &:active {
-                scale: 0.9;
-            }
-            &#yes {
-                background-color: rgb(241, 106, 106);
-                &:hover {
-                    background-color: rgb(243, 71, 71);
-                }
-            }
-            &:hover {
-              background-color: rgb(4, 168, 4);
-            }
-        }
+      }
     }
   }
   nav {
@@ -85,7 +111,7 @@
       input {
         background-color: rgb(198, 186, 186);
         flex: 1;
-        padding: 4px ;
+        padding: 4px;
         outline: none;
         border-radius: 0.3em;
         border: none;
@@ -112,19 +138,19 @@
   }
   .accordion {
     ul {
-        display: grid;
-        gap: 0.5em;
-        li {
-            cursor: pointer;
-            padding: 0.2em 0.3em;
-            border-radius: 8px;
-            &.completed {
-              color: gray;
-            }
-            &:hover {
-                background-color: rgb(210, 174, 210);
-            }
+      display: grid;
+      gap: 0.5em;
+      li {
+        cursor: pointer;
+        padding: 0.2em 0.3em;
+        border-radius: 8px;
+        &.completed {
+          color: gray;
         }
+        &:hover {
+          background-color: rgb(210, 174, 210);
+        }
+      }
     }
     .title {
       display: flex;
