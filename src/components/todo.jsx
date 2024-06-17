@@ -54,8 +54,24 @@ function Todo() {
         setTitle("");
         setBody("");
         setDueDate("");
+        if (data.status) {
+          Notification("success", {
+            title: "Success",
+            body: "Item added successfully" + data.message,
+          })();
+        } else {
+          Notification("error", {
+            title: "Error",
+            body: data.message,
+          })();
+        }
       })
-      .catch((err) => console.log("there was an error", err));
+      .catch((err) => {
+        Notification("error", {
+          title: "Error",
+          body: err.message,
+        })();
+      });
   };
   const handleTaskEdit = (data) => {
     setSubmitAction("Updated");
