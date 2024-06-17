@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import EachTodo from "./EachTodo";
 import PopUp from "./PopUp";
+import Notification from "./Notification";
+import { NotificationContainer } from "react-notifications";
 // import { FaPlus } from "react-icons";
 
 function Todo() {
@@ -12,7 +14,7 @@ function Todo() {
   let [popUpState, setPopUpState] = useState([false, ""]);
   let [taskDetail, setTaskDetail] = useState("");
   let [updateNeeded, setUpdateNeeded] = useState(true);
-  let [submitAction, setSubmitAction] = useState("add");
+  let [submitAction, setSubmitAction] = useState("Added");
 
   // console.log("todo function", taskID);
 
@@ -56,7 +58,7 @@ function Todo() {
       .catch((err) => console.log("there was an error", err));
   };
   const handleTaskEdit = (data) => {
-    setSubmitAction("update");
+    setSubmitAction("Updated");
     setInputField(true);
     console.log(data);
     setTaskDetail(data);
@@ -73,13 +75,6 @@ function Todo() {
     handleUpdate(update);
   };
   const handleUpdate = (data) => {
-    // let complete =
-    //   submitAction === "add"
-    //     ? taskDetail.completed
-    //       ? 0
-    //       : 1
-    //     : taskDetail.completed;
-    // console.log(title, body, dueDate, complete, submitAction);
     fetch(`http://127.0.0.1:3110/todo/${taskDetail.id}/edit`, {
       method: "PATCH",
       headers: { "content-Type": "application/json" },
@@ -93,7 +88,11 @@ function Todo() {
       .then((response) => response.json())
       .then((data) => {
         data.status ? setUpdateNeeded((prev) => !prev) : console.log(data);
-        setSubmitAction("add");
+        Notification("success", {
+          title: "Success",
+          body: `Updated successfully`,
+        })();
+        setSubmitAction("Added");
         setTitle("");
         setBody("");
         setDueDate("");
@@ -111,6 +110,10 @@ function Todo() {
           .then((data) => {
             if (data.status) setUpdateNeeded((prev) => !prev);
             console.log(data);
+            Notification("success", {
+              title: "Success",
+              body: "Item deleted successfully",
+            })();
           })
           .catch((err) => {
             console.log("There was an error", err);
@@ -127,6 +130,7 @@ function Todo() {
   };
   return (
     <div className="mainContainer">
+      <NotificationContainer />
       {popUpState[0] ? (
         <PopUp text={popUpState[1]} action={handlePopUp} />
       ) : null}
@@ -176,10 +180,10 @@ function Todo() {
             <button
               type="submit"
               onClick={
-                submitAction === "add" ? handleSubmit : handleUpdateSubmit
+                submitAction === "Added" ? handleSubmit : handleUpdateSubmit
               }
             >
-              {submitAction === "add" ? "ADD" : "UPDATE"}
+              {submitAction === "Added" ? "ADD" : "UPDATE"}
             </button>
           </div>
         ) : null}

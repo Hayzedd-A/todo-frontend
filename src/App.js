@@ -4,6 +4,7 @@ import "./style.css";
 import Accordion from "./components/Accordion";
 import Accordion2 from "./components/Accordion2";
 import Todo from "./components/todo";
+import Notification from "./components/Notification";
 
 const UserContext = createContext();
 function App() {
@@ -11,6 +12,7 @@ function App() {
   return (
     <div className="App">
       <Todo />
+      {/* <Notification /> */}
     </div>
   );
 }
