@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { BiSelectMultiple, BiSelection, BiSave } from "react-icons/bi";
-import { FaMarker, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
-// import Data from "../../Datas/accordionData";
-// import "./styles.css";
-
-function EachTodo({ Data, popUp, taskID }) {
+function EachTodo({ Data, popUp, taskID, handleEdit }) {
   let [selectionType, setSelectionType] = useState(["Multiple", "Single"]);
   let [selected, setSelected] = useState(null);
   let [selectedItems, setSelectedItem] = useState([]);
@@ -19,17 +16,15 @@ function EachTodo({ Data, popUp, taskID }) {
     } else selected === id ? setSelected(null) : setSelected(id);
     setnewHeight("max-content");
   };
-  const handleTaskClick = (id, text) => {
+  const handleTaskClick = (data, text) => {
+    // handleEdit(id);
     popUp([true, text]);
-    taskID(id);
+    taskID(data);
   };
   return (
     <div
       className="accordion"
       style={{
-        // minHeight: "100vh",
-        // backgroundColor: "#54242a",
-        // color: "white",
         padding: "1em",
       }}
     >
@@ -38,10 +33,9 @@ function EachTodo({ Data, popUp, taskID }) {
         {Data.map((ele) => (
           <li
             key={ele.id}
-            className={"item_" + ele.id}
-            style={{
-              height: newHeight,
-            }}
+            className={
+              ele.completed ? `item_${ele.id} completed` : "item_" + ele.id
+            }
           >
             <div className="title" onClick={() => HandleListClick(ele.id)}>
               <h2>{ele.title}</h2>
@@ -50,18 +44,36 @@ function EachTodo({ Data, popUp, taskID }) {
                   <span>
                     Created: {ele.createdDate.replace("T", "  @ ").slice(0, -5)}
                   </span>
-                  <span>Due: {ele.dueDate}</span>
+                  <span>
+                    Due:{" "}
+                    {ele.completed ? "Completed" : ele.dueDate.slice(0, 10)}
+                  </span>
                 </span>
+                <BiSelectMultiple
+                  className="actionIcon select"
+                  fill="green"
+                  size={"1.4em"}
+                  onClick={() =>
+                    handleTaskClick(
+                      ele,
+                      ele.completed ? "mark as incomplete" : "mark as complete"
+                    )
+                  }
+                ></BiSelectMultiple>
+                <FaEdit
+                  fill="green"
+                  size={"1.4em"}
+                  onClick={() => {
+                    handleEdit(ele);
+                    taskID(ele);
+                  }}
+                />
                 <FaTrash
+                  className="actionIcon trash"
                   fill="darkred"
                   size={"1.4em"}
                   onClick={() => handleTaskClick(ele.id, "delete")}
                 ></FaTrash>
-                <BiSelectMultiple
-                  fill="green"
-                  size={"1.4em"}
-                  onClick={() => handleTaskClick(ele.id, "mark as complete")}
-                ></BiSelectMultiple>
               </div>
             </div>
             <div className="content">

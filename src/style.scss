@@ -1,9 +1,9 @@
 .mainContainer {
-  background-color: rgb(251, 219, 224);
+  background-color: rgb(181, 146, 181);
   padding: 1em 2em;
   display: grid;
   gap: 1em;
-  height: 100vh;
+  min-height: 100vh;
   grid-template-rows: 2em 1fr;
   .popUp {
     position: fixed;
@@ -74,31 +74,39 @@
       display: grid;
       gap: 0.5em;
       grid-template-columns: 1fr 1fr;
+      border: 1px solid gray;
+      padding: 8px;
+      border-radius: 8px;
       label {
         display: flex;
         gap: 8px;
+        align-items: center;
       }
       input {
+        background-color: rgb(198, 186, 186);
         flex: 1;
+        padding: 4px ;
+        outline: none;
+        border-radius: 0.3em;
+        border: none;
       }
       textarea {
+        background-color: rgb(198, 186, 186);
+        border: none;
         flex: 1;
         height: 10em;
         grid-column: span 2;
       }
       button {
-        width: 8em;
-        height: 2em;
         justify-self: end;
         grid-column-start: 2;
-      }
-      button {
         background-color: rgb(110, 110, 236);
         color: white;
         border-radius: 8px;
         border: none;
         outline: none;
-        padding: 4px 8px;
+        font-size: 1.5em;
+        padding: 0.2em 1em;
       }
     }
   }
@@ -110,8 +118,11 @@
             cursor: pointer;
             padding: 0.2em 0.3em;
             border-radius: 8px;
+            &.completed {
+              color: gray;
+            }
             &:hover {
-                background-color: lightpink;
+                background-color: rgb(210, 174, 210);
             }
         }
     }
@@ -129,6 +140,16 @@
         .dateDetail {
           font-size: smaller;
           display: grid;
+        }
+        .actionIcon {
+          position: relative;
+          &::after {
+            position: absolute;
+            color: white;
+            background-color: gray;
+            left: 0;
+            top: 0;
+          }
         }
       }
     }
