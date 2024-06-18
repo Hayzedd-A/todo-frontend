@@ -16,11 +16,14 @@ function Todo() {
   let [updateNeeded, setUpdateNeeded] = useState(true);
   let [submitAction, setSubmitAction] = useState("Added");
 
+  let localIP = "127.0.0.1";
+  let networkIP = "192.168.1.2";
+  let IpAddress = localIP;
   // console.log("todo function", taskID);
 
   async function getTodo() {
     try {
-      let response = await fetch("http://127.0.0.1:3110/todo");
+      let response = await fetch(`http://${IpAddress}:3110/todo`);
       let allTodo = await response.json();
       console.log(allTodo.data);
       setAllTodo(allTodo);
@@ -42,7 +45,7 @@ function Todo() {
       body: body,
       dueDate: dueDate,
     });
-    fetch("http://127.0.0.1:3110/todo/", {
+    fetch(`http://${IpAddress}:3110/todo/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: newTodo,
@@ -91,7 +94,7 @@ function Todo() {
     handleUpdate(update);
   };
   const handleUpdate = (data) => {
-    fetch(`http://127.0.0.1:3110/todo/${taskDetail.id}/edit`, {
+    fetch(`http://${IpAddress}:3110/todo/${taskDetail.id}/edit`, {
       method: "PATCH",
       headers: { "content-Type": "application/json" },
       body: JSON.stringify({
@@ -119,7 +122,7 @@ function Todo() {
     if (status) {
       // handle yes
       if (popUpState[1] === "delete") {
-        fetch(`http://127.0.0.1:3110/todo/${taskDetail}`, {
+        fetch(`http://${IpAddress}:3110/todo/${taskDetail}`, {
           method: "DELETE",
         })
           .then((response) => response.json())
