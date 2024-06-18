@@ -3,6 +3,7 @@ import EachTodo from "./EachTodo";
 import PopUp from "./PopUp";
 import Notification from "./Notification";
 import { NotificationContainer } from "react-notifications";
+import Signin from "./Signin";
 // import { FaPlus } from "react-icons";
 
 function Todo() {
@@ -153,6 +154,7 @@ function Todo() {
       {popUpState[0] ? (
         <PopUp text={popUpState[1]} action={handlePopUp} />
       ) : null}
+      <Signin />
       <nav>
         <div className="logo">My TODO</div>
         <div className="links">
