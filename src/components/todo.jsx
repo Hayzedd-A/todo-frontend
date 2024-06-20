@@ -4,6 +4,7 @@ import PopUp from "./PopUp";
 import Notification from "./Notification";
 import { NotificationContainer } from "react-notifications";
 import Signin from "./Signin";
+import useSeasionId from "./useSession";
 // import { FaPlus } from "react-icons";
 
 function Todo() {
@@ -16,15 +17,20 @@ function Todo() {
   let [taskDetail, setTaskDetail] = useState("");
   let [updateNeeded, setUpdateNeeded] = useState(true);
   let [submitAction, setSubmitAction] = useState("Added");
+  let [seasionID, setSeasionID] = useState(() => localStorage.getItem("todo"));
+  let [ipAddress, setIpAddress] = useState("127.0.0.1:3120");
+  let [userID, setUserID] = useState(() => {
+    if (seasionID) return seasionID.split("-")[1];
+  });
 
-  let localIP = "127.0.0.1";
-  let networkIP = "192.168.1.2";
-  let IpAddress = localIP;
-  // console.log("todo function", taskID);
+  // let localIP = "127.0.0.1";
+  // let networkIP = "192.168.1.2";
 
   async function getTodo() {
     try {
-      let response = await fetch(`http://${IpAddress}:3110/todo`);
+      console.log(userID);
+      let response = await fetch(`http://${ipAddress}/todo/${userID}`);
+      console.log(userID);
       let allTodo = await response.json();
       console.log(allTodo.data);
       setAllTodo(allTodo);
@@ -33,8 +39,17 @@ function Todo() {
     }
   }
   useEffect(() => {
+    console.log(userID);
     getTodo();
   }, [updateNeeded]);
+
+  const setSignup = ({ id, seasionID, username }) => {
+    localStorage.setItem("todo", seasionID);
+    setSeasionID(seasionID);
+    setUserID(id);
+    console.log(seasionID);
+    setUpdateNeeded((prev) => !prev);
+  };
 
   const getAllTodo = () => {
     getTodo();
@@ -46,7 +61,7 @@ function Todo() {
       body: body,
       dueDate: dueDate,
     });
-    fetch(`http://${IpAddress}:3110/todo/`, {
+    fetch(`http://${ipAddress}/todo/${userID}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: newTodo,
@@ -61,7 +76,7 @@ function Todo() {
         if (data.status) {
           Notification("success", {
             title: "Success",
-            body: "Item added successfully" + data.message,
+            body: data.message,
           })();
         } else {
           Notification("error", {
@@ -95,7 +110,7 @@ function Todo() {
     handleUpdate(update);
   };
   const handleUpdate = (data) => {
-    fetch(`http://${IpAddress}:3110/todo/${taskDetail.id}/edit`, {
+    fetch(`http://${ipAddress}/todo/${taskDetail.id}/edit`, {
       method: "PATCH",
       headers: { "content-Type": "application/json" },
       body: JSON.stringify({
@@ -123,7 +138,7 @@ function Todo() {
     if (status) {
       // handle yes
       if (popUpState[1] === "delete") {
-        fetch(`http://${IpAddress}:3110/todo/${taskDetail}`, {
+        fetch(`http://${ipAddress}/todo/${taskDetail}`, {
           method: "DELETE",
         })
           .then((response) => response.json())
@@ -148,13 +163,21 @@ function Todo() {
     }
     setPopUpState([false, ""]);
   };
+  const handleSignOut = () => {
+    localStorage.removeItem("todo");
+    setSeasionID(undefined);
+    setUserID(undefined);
+    setUpdateNeeded((prev) => !prev);
+  };
   return (
     <div className="mainContainer">
       <NotificationContainer />
       {popUpState[0] ? (
         <PopUp text={popUpState[1]} action={handlePopUp} />
       ) : null}
-      <Signin />
+      {seasionID ? null : (
+        <Signin ipAddress={ipAddress} setSeasion={setSignup} />
+      )}
       <nav>
         <div className="logo">My TODO</div>
         <div className="links">
@@ -165,7 +188,7 @@ function Todo() {
             <li id="all" onClick={() => getAllTodo()}>
               All task
             </li>
-            <li>Done</li>
+            <li onClick={handleSignOut}>{seasionID ? "Log out" : "Log in"}</li>
           </ul>
         </div>
       </nav>

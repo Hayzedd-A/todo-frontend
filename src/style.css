@@ -74,6 +74,26 @@
 .mainContainer .signin .subContainer form input {
   padding: 4px 12px;
   border: none;
+  border-bottom: 1px solid gray;
+}
+.mainContainer .signin .subContainer form input:focus {
+  outline: none;
+}
+.mainContainer .signin .subContainer form input[type=submit] {
+  cursor: pointer;
+  border-bottom: none;
+  background-color: rgb(134, 233, 134);
+  padding: 8px;
+  border-radius: 4px;
+}
+.mainContainer .signin .subContainer form input[type=submit]:hover {
+  background-color: rgb(40, 244, 40);
+}
+.mainContainer .signin .subContainer form input[type=submit]:active {
+  scale: 0.9;
+}
+.mainContainer .signin .subContainer p {
+  margin-top: 0;
 }
 .mainContainer nav {
   display: flex;

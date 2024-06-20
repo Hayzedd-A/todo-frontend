@@ -68,7 +68,27 @@
         input {
           padding: 4px 12px;
           border: none;
+          border-bottom: 1px solid gray;
+          &:focus {
+            outline: none;
+          }
+          &[type="submit"] {
+            cursor: pointer;
+            border-bottom: none;
+            background-color: rgb(134, 233, 134);
+            padding: 8px;
+            border-radius: 4px;
+            &:hover {
+              background-color: rgb(40, 244, 40);
+            }
+            &:active {
+              scale: 0.9;
+            }
+          }
         }
+      }
+      p {
+        margin-top: 0;
       }
     }
   }
@@ -186,3 +206,4 @@
     }
   }
 }
+
