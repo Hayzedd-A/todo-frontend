@@ -1,5 +1,5 @@
 .mainContainer {
-  background-color: rgb(181, 146, 181);
+  background-color: rgb(181, 255, 227);
   padding: 1em 2em;
   display: grid;
   gap: 1em;
@@ -132,7 +132,7 @@
   align-items: center;
 }
 .mainContainer .taskContainer .inputs input {
-  background-color: rgb(198, 186, 186);
+  background-color: rgba(5, 107, 68, 0.1);
   flex: 1;
   padding: 4px;
   outline: none;
@@ -140,8 +140,10 @@
   border: none;
 }
 .mainContainer .taskContainer .inputs textarea {
-  background-color: rgb(198, 186, 186);
+  background-color: rgba(5, 107, 68, 0.1);
   border: none;
+  border-radius: 0.3em;
+  outline: none;
   flex: 1;
   height: 10em;
   grid-column: span 2;
@@ -149,13 +151,17 @@
 .mainContainer .taskContainer .inputs button {
   justify-self: end;
   grid-column-start: 2;
-  background-color: rgb(110, 110, 236);
-  color: white;
+  background-color: rgb(25, 209, 25);
+  color: black;
   border-radius: 8px;
   border: none;
   outline: none;
   font-size: 1.5em;
   padding: 0.2em 1em;
+  cursor: pointer;
+}
+.mainContainer .taskContainer .inputs button:active {
+  scale: 0.9;
 }
 .mainContainer .accordion ul {
   display: grid;
@@ -170,7 +176,7 @@
   color: gray;
 }
 .mainContainer .accordion ul li:hover {
-  background-color: rgb(210, 174, 210);
+  background-color: rgba(5, 107, 68, 0.2);
 }
 .mainContainer .accordion .title {
   display: flex;
@@ -201,4 +207,15 @@
 }
 .mainContainer .accordion .content p {
   text-align: start;
+}
+.mainContainer .loadingAnimation {
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }/*# sourceMappingURL=style.css.map */

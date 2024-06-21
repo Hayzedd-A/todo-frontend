@@ -1,1 +1,6 @@
 /node_modules
+/src/components/Accordion.jsx
+/src/components/Accordion.jsx
+/src/components/data.js
+/src/components/useEffect.jsx
+/src/components/useSession.jsx

@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import useSessionId from "./useSession";
 import Notification from "./Notification";
 import { NotificationContainer } from "react-notifications";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Signin({ ipAddress, setSeasion }) {
   let [signIn, setSignIn] = useState(false);
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = () => {
-    // console.log(`http://${ipAddress}/signup`);
-    fetch(`http://${ipAddress}/signup`, {
+    // console.log(`https://${ipAddress}/signup`);
+    fetch(`https://${ipAddress}/signup`, {
       method: "POST",
       headers: { "content-Type": "application/json" },
       body: JSON.stringify({
@@ -45,7 +47,8 @@ function Signin({ ipAddress, setSeasion }) {
       });
   };
   const handleSignIn = () => {
-    fetch(`http://${ipAddress}/signin`, {
+    setIsLoading(true);
+    fetch(`https://${ipAddress}/signin`, {
       method: "POST",
       headers: { "content-Type": "application/json" },
       body: JSON.stringify({
@@ -61,6 +64,7 @@ function Signin({ ipAddress, setSeasion }) {
             title: "Success",
             body: data.message,
           })();
+          setIsLoading(false);
           setSeasion(data.data);
         } else {
           console.log("this");
@@ -68,6 +72,7 @@ function Signin({ ipAddress, setSeasion }) {
             title: "Error",
             body: data.message,
           })();
+          setIsLoading(false);
         }
       })
       .catch((err) => console.log(err));
@@ -76,6 +81,25 @@ function Signin({ ipAddress, setSeasion }) {
   return (
     <div className="signin">
       <NotificationContainer />
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              fontSize: "3em",
+              translateX: "-50%",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <b>Loading...</b>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="subContainer">
         <form onSubmit={(e) => e.preventDefault()}>
           {signIn || (
@@ -83,7 +107,7 @@ function Signin({ ipAddress, setSeasion }) {
               <input
                 type="email"
                 value={email}
-                placeholder="Your username"
+                placeholder="Your Email"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </label>
@@ -91,7 +115,7 @@ function Signin({ ipAddress, setSeasion }) {
           <label htmlFor="username">
             <input
               type="text"
-              placeholder={`Your Email ${signIn ? "or Username" : ""}`}
+              placeholder={`Your username ${signIn ? "or email" : ""}`}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />

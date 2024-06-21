@@ -4,7 +4,8 @@ import PopUp from "./PopUp";
 import Notification from "./Notification";
 import { NotificationContainer } from "react-notifications";
 import Signin from "./Signin";
-import useSeasionId from "./useSession";
+import { motion, AnimatePresence } from "framer-motion";
+import { AiOutlineLoading } from "react-icons/ai";
 // import { FaPlus } from "react-icons";
 
 function Todo() {
@@ -18,24 +19,31 @@ function Todo() {
   let [updateNeeded, setUpdateNeeded] = useState(true);
   let [submitAction, setSubmitAction] = useState("Added");
   let [seasionID, setSeasionID] = useState(() => localStorage.getItem("todo"));
-  let [ipAddress, setIpAddress] = useState("127.0.0.1:3120");
+  let [ipAddress, setIpAddress] = useState(
+    "todo-dfecgbjg9-hayzeddas-projects.vercel.app"
+  );
+  let [isLoading, setLoading] = useState();
   let [userID, setUserID] = useState(() => {
     if (seasionID) return seasionID.split("-")[1];
   });
 
-  // let localIP = "127.0.0.1";
+  // let localIP = "127.0.0.1:3120";
   // let networkIP = "192.168.1.2";
+  // let onlineIP = "https://todo-backend-ebon-five.vercel.app";
 
   async function getTodo() {
+    setLoading(true);
     try {
       console.log(userID);
-      let response = await fetch(`http://${ipAddress}/todo/${userID}`);
+      let response = await fetch(`https://${ipAddress}/todo/${userID}`);
       console.log(userID);
       let allTodo = await response.json();
       console.log(allTodo.data);
       setAllTodo(allTodo);
+      setLoading(false);
     } catch (err) {
       console.log("error", err);
+      setLoading(false);
     }
   }
   useEffect(() => {
@@ -56,12 +64,13 @@ function Todo() {
     setInputField(false);
   };
   const handleSubmit = () => {
+    setLoading(true);
     const newTodo = JSON.stringify({
       title: title,
       body: body,
       dueDate: dueDate,
     });
-    fetch(`http://${ipAddress}/todo/${userID}`, {
+    fetch(`https://${ipAddress}/todo/${userID}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: newTodo,
@@ -102,6 +111,7 @@ function Todo() {
     setDueDate(data.dueDate.slice(0, 10));
   };
   const handleUpdateSubmit = () => {
+    setLoading(true);
     let update = {};
     update.title = title;
     update.body = body;
@@ -110,7 +120,7 @@ function Todo() {
     handleUpdate(update);
   };
   const handleUpdate = (data) => {
-    fetch(`http://${ipAddress}/todo/${taskDetail.id}/edit`, {
+    fetch(`https://${ipAddress}/todo/edit/${taskDetail.id}`, {
       method: "PATCH",
       headers: { "content-Type": "application/json" },
       body: JSON.stringify({
@@ -127,6 +137,7 @@ function Todo() {
           title: "Success",
           body: `Updated successfully`,
         })();
+        setLoading(false);
         setSubmitAction("Added");
         setTitle("");
         setBody("");
@@ -136,9 +147,10 @@ function Todo() {
   };
   const handlePopUp = (status) => {
     if (status) {
+      setLoading(true);
       // handle yes
       if (popUpState[1] === "delete") {
-        fetch(`http://${ipAddress}/todo/${taskDetail}`, {
+        fetch(`https://${ipAddress}/todo/${taskDetail}`, {
           method: "DELETE",
         })
           .then((response) => response.json())
@@ -149,6 +161,7 @@ function Todo() {
               title: "Success",
               body: "Item deleted successfully",
             })();
+            setLoading(false);
           })
           .catch((err) => {
             console.log("There was an error", err);
@@ -172,12 +185,51 @@ function Todo() {
   return (
     <div className="mainContainer">
       <NotificationContainer />
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              fontSize: "3em",
+              translateX: "-50%",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <AiOutlineLoading size={"3em"} className="loadingAnimation" />
+          </motion.div>
+        )}
+      </AnimatePresence>
       {popUpState[0] ? (
-        <PopUp text={popUpState[1]} action={handlePopUp} />
+        <AnimatePresence>
+          <motion.div
+            style={{ position: "absolute" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <PopUp text={popUpState[1]} action={handlePopUp} />
+          </motion.div>
+        </AnimatePresence>
       ) : null}
+      {/* <AnimatePresence> */}
       {seasionID ? null : (
         <Signin ipAddress={ipAddress} setSeasion={setSignup} />
       )}
+      {/* <motion.div
+            style={{ position: "absolute" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+          </motion.div>
+      </AnimatePresence> */}
       <nav>
         <div className="logo">My TODO</div>
         <div className="links">
