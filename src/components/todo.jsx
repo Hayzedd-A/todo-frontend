@@ -9,7 +9,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 // import { FaPlus } from "react-icons";
 
 function Todo() {
-  let [allTodo, setAllTodo] = useState(null);
+  let [allTodo, setAllTodo] = useState([]);
   let [inputField, setInputField] = useState(false);
   let [title, setTitle] = useState("");
   let [body, setBody] = useState("");
@@ -20,26 +20,24 @@ function Todo() {
   let [submitAction, setSubmitAction] = useState("Added");
   let [seasionID, setSeasionID] = useState(() => localStorage.getItem("todo"));
   let [ipAddress, setIpAddress] = useState(
-    "todo-dfecgbjg9-hayzeddas-projects.vercel.app"
+    // "https://todo-kpsdvesez-hayzeddas-projects.vercel.app"
+    "http://127.0.0.1:3130"
+    // "http://192.168.1.3:3130"
   );
   let [isLoading, setLoading] = useState();
   let [userID, setUserID] = useState(() => {
     if (seasionID) return seasionID.split("-")[1];
   });
 
-  // let localIP = "127.0.0.1:3120";
-  // let networkIP = "192.168.1.2";
-  // let onlineIP = "https://todo-backend-ebon-five.vercel.app";
-
   async function getTodo() {
     setLoading(true);
     try {
       console.log(userID);
-      let response = await fetch(`https://${ipAddress}/todo/${userID}`);
+      let response = await fetch(`${ipAddress}/todo/${userID}`);
       console.log(userID);
       let allTodo = await response.json();
-      console.log(allTodo.data);
-      setAllTodo(allTodo);
+      console.log(allTodo);
+      setAllTodo(allTodo.data);
       setLoading(false);
     } catch (err) {
       console.log("error", err);
@@ -63,44 +61,39 @@ function Todo() {
     getTodo();
     setInputField(false);
   };
-  const handleSubmit = () => {
-    setLoading(true);
-    const newTodo = JSON.stringify({
-      title: title,
-      body: body,
-      dueDate: dueDate,
-    });
-    fetch(`https://${ipAddress}/todo/${userID}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: newTodo,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setUpdateNeeded((prev) => !prev);
-        setTitle("");
-        setBody("");
-        setDueDate("");
-        if (data.status) {
-          Notification("success", {
-            title: "Success",
-            body: data.message,
-          })();
-        } else {
-          Notification("error", {
-            title: "Error",
-            body: data.message,
-          })();
-        }
-      })
-      .catch((err) => {
-        Notification("error", {
-          title: "Error",
-          body: err.message,
-        })();
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const newTodo = JSON.stringify({
+        title: title,
+        body: body,
+        dueDate: dueDate,
       });
+      let response = await fetch(`${ipAddress}/todo/${userID}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: newTodo,
+      });
+      let data = await response.json();
+      console.log(data);
+      setUpdateNeeded((prev) => !prev);
+      setTitle("");
+      setBody("");
+      setDueDate("");
+      if (!data.status) throw new Error(data.message);
+      Notification("success", {
+        title: "Success",
+        body: data.message,
+      })();
+    } catch (error) {
+      Notification("error", {
+        title: "Error",
+        body: error.message,
+      })();
+    }
   };
+
   const handleTaskEdit = (data) => {
     setSubmitAction("Updated");
     setInputField(true);
@@ -110,6 +103,7 @@ function Todo() {
     setBody(data.body);
     setDueDate(data.dueDate.slice(0, 10));
   };
+
   const handleUpdateSubmit = () => {
     setLoading(true);
     let update = {};
@@ -119,63 +113,76 @@ function Todo() {
     update.completed = taskDetail.completed;
     handleUpdate(update);
   };
-  const handleUpdate = (data) => {
-    fetch(`https://${ipAddress}/todo/edit/${taskDetail.id}`, {
-      method: "PATCH",
-      headers: { "content-Type": "application/json" },
-      body: JSON.stringify({
-        title: data.title,
-        body: data.body,
-        completed: data.completed,
-        dueDate: data.dueDate,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        data.status ? setUpdateNeeded((prev) => !prev) : console.log(data);
-        Notification("success", {
-          title: "Success",
-          body: `Updated successfully`,
-        })();
-        setLoading(false);
-        setSubmitAction("Added");
-        setTitle("");
-        setBody("");
-        setDueDate("");
-      })
-      .catch((err) => console.log("There was an error", err));
-  };
-  const handlePopUp = (status) => {
-    if (status) {
-      setLoading(true);
-      // handle yes
-      if (popUpState[1] === "delete") {
-        fetch(`https://${ipAddress}/todo/${taskDetail}`, {
-          method: "DELETE",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status) setUpdateNeeded((prev) => !prev);
-            console.log(data);
-            Notification("success", {
-              title: "Success",
-              body: "Item deleted successfully",
-            })();
-            setLoading(false);
-          })
-          .catch((err) => {
-            console.log("There was an error", err);
-          });
-      } else {
-        taskDetail.dueDate = taskDetail.dueDate.slice(0, 10);
-        taskDetail.completed = taskDetail.completed ? 0 : 1;
-        console.log(taskDetail);
 
-        handleUpdate(taskDetail);
-      }
+  const handleUpdate = async (data) => {
+    try {
+      let response = await fetch(`${ipAddress}/todo/edit/${taskDetail.id}`, {
+        method: "PATCH",
+        headers: { "content-Type": "application/json" },
+        body: JSON.stringify({
+          title: data.title,
+          body: data.body,
+          completed: data.completed,
+          dueDate: data.dueDate,
+        }),
+      });
+      let result = await response.json();
+      if (!result.status) throw new Error(result.message);
+      setUpdateNeeded((prev) => !prev);
+      Notification("success", {
+        title: "Success",
+        body: `Updated successfully`,
+      })();
+      setLoading(false);
+      setSubmitAction("Added");
+      setTitle("");
+      setBody("");
+      setDueDate("");
+      return true;
+    } catch (error) {
+      Notification("success", {
+        title: "Success",
+        body: error.message,
+      })();
+      // setUpdateNeeded((prev) => !prev);
     }
-    setPopUpState([false, ""]);
   };
+
+  const handlePopUp = async (status) => {
+    try {
+      if (status) {
+        setLoading(true);
+        // handle yes
+        if (popUpState[1] === "delete") {
+          let response = await fetch(`${ipAddress}/todo/${taskDetail}`, {
+            method: "DELETE",
+          });
+          let result = await response.json();
+          if (!result.status) throw new Error(result.status);
+          setUpdateNeeded((prev) => !prev);
+          console.log(result);
+          setLoading(false);
+          Notification("success", {
+            title: "Success",
+            body: "Item deleted successfully",
+          })();
+        } else {
+          taskDetail.dueDate = taskDetail.dueDate.slice(0, 10);
+          taskDetail.completed = taskDetail.completed ? 0 : 1;
+          console.log(taskDetail);
+
+          handleUpdate(taskDetail);
+        }
+      }
+      setPopUpState([false, ""]);
+    } catch (error) {
+      Notification("error", {
+        title: "error",
+        body: error.message,
+      })();
+    }
+  };
+
   const handleSignOut = () => {
     localStorage.removeItem("todo");
     setSeasionID(undefined);
@@ -217,19 +224,9 @@ function Todo() {
           </motion.div>
         </AnimatePresence>
       ) : null}
-      {/* <AnimatePresence> */}
       {seasionID ? null : (
         <Signin ipAddress={ipAddress} setSeasion={setSignup} />
       )}
-      {/* <motion.div
-            style={{ position: "absolute" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-          </motion.div>
-      </AnimatePresence> */}
       <nav>
         <div className="logo">My TODO</div>
         <div className="links">
@@ -285,14 +282,16 @@ function Todo() {
         ) : null}
 
         <div className="taskLists">
-          {allTodo ? (
+          {allTodo.length ? (
             <EachTodo
               handleEdit={handleTaskEdit}
-              Data={allTodo.data}
+              Data={allTodo}
               popUp={setPopUpState}
               taskID={setTaskDetail}
             />
-          ) : null}
+          ) : (
+            <h1>You do not have any post yet</h1>
+          )}
         </div>
       </div>
     </div>

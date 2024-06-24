@@ -11,71 +11,61 @@ function Signin({ ipAddress, setSeasion }) {
   let [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignup = () => {
-    // console.log(`https://${ipAddress}/signup`);
-    fetch(`https://${ipAddress}/signup`, {
-      method: "POST",
-      headers: { "content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-        username: username,
-        password: password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status) {
-          Notification("success", {
-            title: "Success",
-            body: data.message,
-          })();
-          setSeasion(data.data);
-        } else {
-          Notification("error", {
-            title: "Error",
-            body: data.message,
-          })();
-        }
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log("There was an error", err);
-        Notification("error", {
-          title: "Error",
-          body: err.message,
-        })();
+  const handleSignup = async () => {
+    try {
+      setIsLoading(true);
+      let response = await fetch(`${ipAddress}/signup`, {
+        method: "POST",
+        headers: { "content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          username: username,
+          password: password,
+        }),
       });
+      let result = await response.json();
+      if (!result.status) throw new Error(result.message);
+      Notification("success", {
+        title: "Success",
+        body: result.message,
+      })();
+      setSeasion(result.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log("There was an error", error);
+      Notification("error", {
+        title: "Error",
+        body: error.message,
+      })();
+      setIsLoading(false);
+    }
   };
-  const handleSignIn = () => {
-    setIsLoading(true);
-    fetch(`https://${ipAddress}/signin`, {
-      method: "POST",
-      headers: { "content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status) {
-          console.log(data);
-          Notification("success", {
-            title: "Success",
-            body: data.message,
-          })();
-          setIsLoading(false);
-          setSeasion(data.data);
-        } else {
-          console.log("this");
-          Notification("error", {
-            title: "Error",
-            body: data.message,
-          })();
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => console.log(err));
+  const handleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${ipAddress}/signin`, {
+        method: "POST",
+        headers: { "content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+      const result = await response.json();
+      if (!result.status) throw new Error(result.message);
+      Notification("success", {
+        title: "Success",
+        body: result.message,
+      })();
+      setSeasion(result.data);
+      setIsLoading(false);
+    } catch (error) {
+      Notification("error", {
+        title: "Error",
+        body: error.message,
+      })();
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -84,8 +74,10 @@ function Signin({ ipAddress, setSeasion }) {
       <AnimatePresence>
         {isLoading && (
           <motion.div
+            className="animation"
             style={{
               position: "absolute",
+              zIndex: "2",
               top: "50%",
               left: "50%",
               fontSize: "3em",

@@ -119,7 +119,7 @@
     .inputs {
       display: grid;
       gap: 0.5em;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       border: 1px solid gray;
       padding: 8px;
       border-radius: 8px;
@@ -127,11 +127,14 @@
         display: flex;
         gap: 8px;
         align-items: center;
+        &:first-child {
+          grid-column: span 2;
+        }
       }
       input {
         background-color: rgba(5, 107, 68, 0.1);
         flex: 1;
-        padding: 4px;
+        padding: 8px;
         outline: none;
         border-radius: 0.3em;
         border: none;
@@ -143,11 +146,11 @@
         outline: none;
         flex: 1;
         height: 10em;
-        grid-column: span 2;
+        grid-column: span 3;
       }
       button {
         justify-self: end;
-        grid-column-start: 2;
+        grid-column-start: 3;
         background-color: rgb(25, 209, 25);
         color: black;
         border-radius: 8px;
@@ -212,7 +215,9 @@
     }
   }
   .loadingAnimation {
-    animation: rotate 1s linear infinite
+    animation: rotate 1s linear infinite;
+    z-index: 2;
+
   }
   @keyframes rotate {
     0% {
