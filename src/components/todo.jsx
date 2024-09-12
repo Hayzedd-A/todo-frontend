@@ -20,12 +20,14 @@ function Todo() {
   let [submitAction, setSubmitAction] = useState("Added");
   let [seasionID, setSeasionID] = useState(() => localStorage.getItem("todo"));
   let [ipAddress, setIpAddress] = useState(
-    // "https://todo-kpsdvesez-hayzeddas-projects.vercel.app"
-    "http://127.0.0.1:3130"
-    // "http://192.168.1.3:3130"
+    "https://todo-backend-drs3.onrender.com"
   );
+  // "https://cors-anywhere.herokuapp.com/"
+  // "https://todo-j7yn8rew6-hayzeddas-projects.vercel.app"
+  // "http://127.0.0.1:3130"
+  // "http://192.168.1.3:3130"
   let [isLoading, setLoading] = useState();
-  let [userID, setUserID] = useState(() => {
+  const [userID, setUserID] = useState(() => {
     if (seasionID) return seasionID.split("-")[1];
   });
 
@@ -46,7 +48,7 @@ function Todo() {
   }
   useEffect(() => {
     console.log(userID);
-    getTodo();
+    if (userID) getTodo();
   }, [updateNeeded]);
 
   const setSignup = ({ id, seasionID, username }) => {
@@ -54,7 +56,7 @@ function Todo() {
     setSeasionID(seasionID);
     setUserID(id);
     console.log(seasionID);
-    setUpdateNeeded((prev) => !prev);
+    setUpdateNeeded(prev => !prev);
   };
 
   const getAllTodo = () => {
@@ -77,7 +79,7 @@ function Todo() {
       });
       let data = await response.json();
       console.log(data);
-      setUpdateNeeded((prev) => !prev);
+      setUpdateNeeded(prev => !prev);
       setTitle("");
       setBody("");
       setDueDate("");
@@ -94,7 +96,7 @@ function Todo() {
     }
   };
 
-  const handleTaskEdit = (data) => {
+  const handleTaskEdit = data => {
     setSubmitAction("Updated");
     setInputField(true);
     console.log(data);
@@ -114,7 +116,7 @@ function Todo() {
     handleUpdate(update);
   };
 
-  const handleUpdate = async (data) => {
+  const handleUpdate = async data => {
     try {
       let response = await fetch(`${ipAddress}/todo/edit/${taskDetail.id}`, {
         method: "PATCH",
@@ -128,7 +130,7 @@ function Todo() {
       });
       let result = await response.json();
       if (!result.status) throw new Error(result.message);
-      setUpdateNeeded((prev) => !prev);
+      setUpdateNeeded(prev => !prev);
       Notification("success", {
         title: "Success",
         body: `Updated successfully`,
@@ -148,7 +150,7 @@ function Todo() {
     }
   };
 
-  const handlePopUp = async (status) => {
+  const handlePopUp = async status => {
     try {
       if (status) {
         setLoading(true);
@@ -159,7 +161,7 @@ function Todo() {
           });
           let result = await response.json();
           if (!result.status) throw new Error(result.status);
-          setUpdateNeeded((prev) => !prev);
+          setUpdateNeeded(prev => !prev);
           console.log(result);
           setLoading(false);
           Notification("success", {
@@ -187,7 +189,7 @@ function Todo() {
     localStorage.removeItem("todo");
     setSeasionID(undefined);
     setUserID(undefined);
-    setUpdateNeeded((prev) => !prev);
+    setUpdateNeeded(prev => !prev);
   };
   return (
     <div className="mainContainer">
@@ -231,7 +233,7 @@ function Todo() {
         <div className="logo">My TODO</div>
         <div className="links">
           <ul>
-            <li id="add" onClick={() => setInputField((prev) => !prev)}>
+            <li id="add" onClick={() => setInputField(prev => !prev)}>
               New +
             </li>
             <li id="all" onClick={() => getAllTodo()}>
@@ -251,7 +253,7 @@ function Todo() {
                 id="title"
                 placeholder="Title"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={e => setTitle(e.target.value)}
               />
             </label>
             <label htmlFor="date">
@@ -260,7 +262,7 @@ function Todo() {
                 type="date"
                 placeholder="Due Date"
                 value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
+                onChange={e => setDueDate(e.target.value)}
               />
             </label>
             <textarea
@@ -268,7 +270,7 @@ function Todo() {
               id="description"
               placeholder="Body"
               value={body}
-              onChange={(e) => setBody(e.target.value)}
+              onChange={e => setBody(e.target.value)}
             ></textarea>
             <button
               type="submit"
@@ -290,7 +292,11 @@ function Todo() {
               taskID={setTaskDetail}
             />
           ) : (
-            <h1>You do not have any post yet</h1>
+            <h1>
+              {seasionID
+                ? "You do not have any todo yet"
+                : "You need to sign up or login"}
+            </h1>
           )}
         </div>
       </div>

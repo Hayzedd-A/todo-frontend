@@ -65,6 +65,14 @@
         display: grid;
         gap: 1em;
         align-items: center;
+        label[for="password"] {
+          position: relative;
+          #toggle-password-visibility {
+            position: absolute;
+            right: 0;
+            cursor: pointer;
+          }
+        }
         input {
           padding: 4px 12px;
           border: none;
@@ -204,7 +212,7 @@
             background-color: gray;
             left: 0;
             top: 0;
-            }
+          }
         }
       }
     }
@@ -217,15 +225,13 @@
   .loadingAnimation {
     animation: rotate 1s linear infinite;
     z-index: 2;
-
   }
   @keyframes rotate {
     0% {
-      transform: rotate(0deg)
+      transform: rotate(0deg);
     }
     100% {
       transform: rotate(360deg);
     }
   }
 }
-

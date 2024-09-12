@@ -71,6 +71,14 @@
   gap: 1em;
   align-items: center;
 }
+.mainContainer .signin .subContainer form label[for=password] {
+  position: relative;
+}
+.mainContainer .signin .subContainer form label[for=password] #toggle-password-visibility {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
 .mainContainer .signin .subContainer form input {
   padding: 4px 12px;
   border: none;
