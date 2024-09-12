@@ -91,9 +91,7 @@ function Signin({ ipAddress, setSeasion }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-          >
-            <b>Loading...</b>
-          </motion.div>
+          ></motion.div>
         )}
       </AnimatePresence>
       <div className="subContainer">
@@ -180,9 +178,19 @@ function Signin({ ipAddress, setSeasion }) {
             </span>
           </label>
           {signIn ? (
-            <input type="submit" value="Sign in" onClick={handleSignIn} />
+            <input
+              type="submit"
+              disabled={isLoading}
+              value={isLoading ? "Signing in..." : "Sign in"}
+              onClick={handleSignIn}
+            />
           ) : (
-            <input type="submit" value="Sign Up" onClick={handleSignup} />
+            <input
+              type="submit"
+              disabled={isLoading}
+              value={isLoading ? "Signing up..." : "Sign up"}
+              onClick={handleSignup}
+            />
           )}
         </form>
         {!signIn ? (

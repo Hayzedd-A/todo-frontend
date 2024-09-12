@@ -26,7 +26,7 @@ function Todo() {
   // "https://todo-j7yn8rew6-hayzeddas-projects.vercel.app"
   // "http://127.0.0.1:3130"
   // "http://192.168.1.3:3130"
-  let [isLoading, setLoading] = useState();
+  let [isLoading, setLoading] = useState(false);
   const [userID, setUserID] = useState(() => {
     if (seasionID) return seasionID.split("-")[1];
   });
@@ -294,7 +294,9 @@ function Todo() {
           ) : (
             <h1>
               {seasionID
-                ? "You do not have any todo yet"
+                ? isLoading
+                  ? "Getting your posts..."
+                  : "You do not have any todo yet"
                 : "You need to sign up or login"}
             </h1>
           )}
